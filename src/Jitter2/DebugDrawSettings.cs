@@ -15,6 +15,14 @@ public static class DebugDrawColors
     public const uint White = 0xFFFFFFFF;
     public const uint Green = 0x00FF00FF;
     public const uint Red = 0xFF0000FF;
+    public const uint Yellow = 0xFFFF00FF;
+    public const uint Cyan = 0x00FFFFFF;
+    public const uint Magenta = 0xFF00FFFF;
+    public const uint Orange = 0xFF8800FF;
+    public const uint Gray = 0x808080FF;
+
+    // Lighter than pure blue, which is hard to read against dark backgrounds.
+    public const uint Blue = 0x4488FFFF;
 
     // Lighter axis colors stay readable against dark backgrounds.
     public const uint AxisX = 0xFF6666FF;
