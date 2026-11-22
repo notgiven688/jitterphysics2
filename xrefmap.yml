@@ -2998,6 +2998,121 @@ references:
   isSpec: "True"
   fullName: Jitter2.Collision.Shapes.RigidBodyShape.Velocity
   nameWithType: RigidBodyShape.Velocity
+- uid: Jitter2.Collision.Shapes.RoundedShape
+  name: RoundedShape
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html
+  commentId: T:Jitter2.Collision.Shapes.RoundedShape
+  fullName: Jitter2.Collision.Shapes.RoundedShape
+  nameWithType: RoundedShape
+- uid: Jitter2.Collision.Shapes.RoundedShape.#ctor(Jitter2.Collision.Shapes.RigidBodyShape,System.Single)
+  name: RoundedShape(RigidBodyShape, float)
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape__ctor_Jitter2_Collision_Shapes_RigidBodyShape_System_Single_
+  commentId: M:Jitter2.Collision.Shapes.RoundedShape.#ctor(Jitter2.Collision.Shapes.RigidBodyShape,System.Single)
+  name.vb: New(RigidBodyShape, Single)
+  fullName: Jitter2.Collision.Shapes.RoundedShape.RoundedShape(Jitter2.Collision.Shapes.RigidBodyShape, float)
+  fullName.vb: Jitter2.Collision.Shapes.RoundedShape.New(Jitter2.Collision.Shapes.RigidBodyShape, Single)
+  nameWithType: RoundedShape.RoundedShape(RigidBodyShape, float)
+  nameWithType.vb: RoundedShape.New(RigidBodyShape, Single)
+- uid: Jitter2.Collision.Shapes.RoundedShape.#ctor*
+  name: RoundedShape
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape__ctor_
+  commentId: Overload:Jitter2.Collision.Shapes.RoundedShape.#ctor
+  isSpec: "True"
+  name.vb: New
+  fullName: Jitter2.Collision.Shapes.RoundedShape.RoundedShape
+  fullName.vb: Jitter2.Collision.Shapes.RoundedShape.New
+  nameWithType: RoundedShape.RoundedShape
+  nameWithType.vb: RoundedShape.New
+- uid: Jitter2.Collision.Shapes.RoundedShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)
+  name: CalculateBoundingBox(in JQuaternion, in JVector, out JBoundingBox)
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_CalculateBoundingBox_Jitter2_LinearMath_JQuaternion__Jitter2_LinearMath_JVector__Jitter2_LinearMath_JBoundingBox__
+  commentId: M:Jitter2.Collision.Shapes.RoundedShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion@,Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JBoundingBox@)
+  name.vb: CalculateBoundingBox(JQuaternion, JVector, JBoundingBox)
+  fullName: Jitter2.Collision.Shapes.RoundedShape.CalculateBoundingBox(in Jitter2.LinearMath.JQuaternion, in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JBoundingBox)
+  fullName.vb: Jitter2.Collision.Shapes.RoundedShape.CalculateBoundingBox(Jitter2.LinearMath.JQuaternion, Jitter2.LinearMath.JVector, Jitter2.LinearMath.JBoundingBox)
+  nameWithType: RoundedShape.CalculateBoundingBox(in JQuaternion, in JVector, out JBoundingBox)
+  nameWithType.vb: RoundedShape.CalculateBoundingBox(JQuaternion, JVector, JBoundingBox)
+- uid: Jitter2.Collision.Shapes.RoundedShape.CalculateBoundingBox*
+  name: CalculateBoundingBox
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_CalculateBoundingBox_
+  commentId: Overload:Jitter2.Collision.Shapes.RoundedShape.CalculateBoundingBox
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.RoundedShape.CalculateBoundingBox
+  nameWithType: RoundedShape.CalculateBoundingBox
+- uid: Jitter2.Collision.Shapes.RoundedShape.GetCenter(Jitter2.LinearMath.JVector@)
+  name: GetCenter(out JVector)
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_GetCenter_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.RoundedShape.GetCenter(Jitter2.LinearMath.JVector@)
+  name.vb: GetCenter(JVector)
+  fullName: Jitter2.Collision.Shapes.RoundedShape.GetCenter(out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.Shapes.RoundedShape.GetCenter(Jitter2.LinearMath.JVector)
+  nameWithType: RoundedShape.GetCenter(out JVector)
+  nameWithType.vb: RoundedShape.GetCenter(JVector)
+- uid: Jitter2.Collision.Shapes.RoundedShape.GetCenter*
+  name: GetCenter
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_GetCenter_
+  commentId: Overload:Jitter2.Collision.Shapes.RoundedShape.GetCenter
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.RoundedShape.GetCenter
+  nameWithType: RoundedShape.GetCenter
+- uid: Jitter2.Collision.Shapes.RoundedShape.OriginalShape
+  name: OriginalShape
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_OriginalShape
+  commentId: P:Jitter2.Collision.Shapes.RoundedShape.OriginalShape
+  fullName: Jitter2.Collision.Shapes.RoundedShape.OriginalShape
+  nameWithType: RoundedShape.OriginalShape
+- uid: Jitter2.Collision.Shapes.RoundedShape.OriginalShape*
+  name: OriginalShape
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_OriginalShape_
+  commentId: Overload:Jitter2.Collision.Shapes.RoundedShape.OriginalShape
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.RoundedShape.OriginalShape
+  nameWithType: RoundedShape.OriginalShape
+- uid: Jitter2.Collision.Shapes.RoundedShape.Radius
+  name: Radius
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_Radius
+  commentId: P:Jitter2.Collision.Shapes.RoundedShape.Radius
+  fullName: Jitter2.Collision.Shapes.RoundedShape.Radius
+  nameWithType: RoundedShape.Radius
+- uid: Jitter2.Collision.Shapes.RoundedShape.Radius*
+  name: Radius
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_Radius_
+  commentId: Overload:Jitter2.Collision.Shapes.RoundedShape.Radius
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.RoundedShape.Radius
+  nameWithType: RoundedShape.Radius
+- uid: Jitter2.Collision.Shapes.RoundedShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name: SupportFeature(in JVector, float, Span<JVector>)
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_SupportFeature_Jitter2_LinearMath_JVector__System_Single_System_Span_Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.RoundedShape.SupportFeature(Jitter2.LinearMath.JVector@,System.Single,System.Span{Jitter2.LinearMath.JVector})
+  name.vb: SupportFeature(JVector, Single, Span(Of JVector))
+  fullName: Jitter2.Collision.Shapes.RoundedShape.SupportFeature(in Jitter2.LinearMath.JVector, float, System.Span<Jitter2.LinearMath.JVector>)
+  fullName.vb: Jitter2.Collision.Shapes.RoundedShape.SupportFeature(Jitter2.LinearMath.JVector, Single, System.Span(Of Jitter2.LinearMath.JVector))
+  nameWithType: RoundedShape.SupportFeature(in JVector, float, Span<JVector>)
+  nameWithType.vb: RoundedShape.SupportFeature(JVector, Single, Span(Of JVector))
+- uid: Jitter2.Collision.Shapes.RoundedShape.SupportFeature*
+  name: SupportFeature
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_SupportFeature_
+  commentId: Overload:Jitter2.Collision.Shapes.RoundedShape.SupportFeature
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.RoundedShape.SupportFeature
+  nameWithType: RoundedShape.SupportFeature
+- uid: Jitter2.Collision.Shapes.RoundedShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name: SupportMap(in JVector, out JVector)
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_SupportMap_Jitter2_LinearMath_JVector__Jitter2_LinearMath_JVector__
+  commentId: M:Jitter2.Collision.Shapes.RoundedShape.SupportMap(Jitter2.LinearMath.JVector@,Jitter2.LinearMath.JVector@)
+  name.vb: SupportMap(JVector, JVector)
+  fullName: Jitter2.Collision.Shapes.RoundedShape.SupportMap(in Jitter2.LinearMath.JVector, out Jitter2.LinearMath.JVector)
+  fullName.vb: Jitter2.Collision.Shapes.RoundedShape.SupportMap(Jitter2.LinearMath.JVector, Jitter2.LinearMath.JVector)
+  nameWithType: RoundedShape.SupportMap(in JVector, out JVector)
+  nameWithType.vb: RoundedShape.SupportMap(JVector, JVector)
+- uid: Jitter2.Collision.Shapes.RoundedShape.SupportMap*
+  name: SupportMap
+  href: api/Jitter2.Collision.Shapes.RoundedShape.html#Jitter2_Collision_Shapes_RoundedShape_SupportMap_
+  commentId: Overload:Jitter2.Collision.Shapes.RoundedShape.SupportMap
+  isSpec: "True"
+  fullName: Jitter2.Collision.Shapes.RoundedShape.SupportMap
+  nameWithType: RoundedShape.SupportMap
 - uid: Jitter2.Collision.Shapes.Shape
   name: Shape
   href: api/Jitter2.Collision.Shapes.Shape.html
@@ -6296,12 +6411,42 @@ references:
   commentId: F:Jitter2.DebugDrawColors.AxisZ
   fullName: Jitter2.DebugDrawColors.AxisZ
   nameWithType: DebugDrawColors.AxisZ
+- uid: Jitter2.DebugDrawColors.Blue
+  name: Blue
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Blue
+  commentId: F:Jitter2.DebugDrawColors.Blue
+  fullName: Jitter2.DebugDrawColors.Blue
+  nameWithType: DebugDrawColors.Blue
+- uid: Jitter2.DebugDrawColors.Cyan
+  name: Cyan
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Cyan
+  commentId: F:Jitter2.DebugDrawColors.Cyan
+  fullName: Jitter2.DebugDrawColors.Cyan
+  nameWithType: DebugDrawColors.Cyan
+- uid: Jitter2.DebugDrawColors.Gray
+  name: Gray
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Gray
+  commentId: F:Jitter2.DebugDrawColors.Gray
+  fullName: Jitter2.DebugDrawColors.Gray
+  nameWithType: DebugDrawColors.Gray
 - uid: Jitter2.DebugDrawColors.Green
   name: Green
   href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Green
   commentId: F:Jitter2.DebugDrawColors.Green
   fullName: Jitter2.DebugDrawColors.Green
   nameWithType: DebugDrawColors.Green
+- uid: Jitter2.DebugDrawColors.Magenta
+  name: Magenta
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Magenta
+  commentId: F:Jitter2.DebugDrawColors.Magenta
+  fullName: Jitter2.DebugDrawColors.Magenta
+  nameWithType: DebugDrawColors.Magenta
+- uid: Jitter2.DebugDrawColors.Orange
+  name: Orange
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Orange
+  commentId: F:Jitter2.DebugDrawColors.Orange
+  fullName: Jitter2.DebugDrawColors.Orange
+  nameWithType: DebugDrawColors.Orange
 - uid: Jitter2.DebugDrawColors.Red
   name: Red
   href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Red
@@ -6314,6 +6459,12 @@ references:
   commentId: F:Jitter2.DebugDrawColors.White
   fullName: Jitter2.DebugDrawColors.White
   nameWithType: DebugDrawColors.White
+- uid: Jitter2.DebugDrawColors.Yellow
+  name: Yellow
+  href: api/Jitter2.DebugDrawColors.html#Jitter2_DebugDrawColors_Yellow
+  commentId: F:Jitter2.DebugDrawColors.Yellow
+  fullName: Jitter2.DebugDrawColors.Yellow
+  nameWithType: DebugDrawColors.Yellow
 - uid: Jitter2.DebugDrawGeometry
   name: DebugDrawGeometry
   href: api/Jitter2.DebugDrawGeometry.html
