@@ -18,6 +18,7 @@ description: A fast, lightweight 3D physics engine written entirely in C#. Explo
       </div>
       <p class="jp-meta">Pure C# <span>·</span> .NET 8+ <span>·</span> MIT licensed</p>
       <p><a href="~/docs/changelog.md" class="jp-text-link">What’s new in Jitter2 <span aria-hidden="true">→</span></a></p>
+      <p><a href="https://github.com/notgiven688/breakwater" class="jp-text-link">Breakwater desktop demo <span aria-hidden="true">↗︎</span></a></p>
     </div>
     <div class="demo-shell">
       <div class="jp-playground-heading"><span><span class="jp-dot"></span> THE PLAYGROUND</span><span>01 — 05</span></div>
