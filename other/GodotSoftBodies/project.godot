@@ -12,7 +12,7 @@ config_version=5
 
 config/name="JitterGodot"
 run/main_scene="res://main_scene.tscn"
-config/features=PackedStringArray("4.3", "C#", "Forward Plus")
+config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [display]
@@ -23,6 +23,11 @@ window/size/viewport_height=1200
 [dotnet]
 
 project/assembly_name="JitterGodot"
+
+[physics]
+
+common/physics_ticks_per_second=100
+common/max_physics_steps_per_frame=4
 
 [rendering]
 
